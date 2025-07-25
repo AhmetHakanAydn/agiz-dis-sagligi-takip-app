@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgizDisSagligiApp.Core", "Core\AgizDisSagligiApp.Core.csproj", "{83BAD863-8EA0-4D54-B129-DE42E674A969}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgizDisSagligiApp.Infrastructure", "Infrastructure\AgizDisSagligiApp.Infrastructure.csproj", "{CCDB3FCC-69CF-4B67-A793-CC6B880FE1E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgizDisSagligiApp.Application", "Application\AgizDisSagligiApp.Application.csproj", "{3D873A82-6381-4A1D-81A0-4DFB5D28D327}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgizDisSagligiApp.Web", "Web\AgizDisSagligiApp.Web.csproj", "{878C5EC5-BC4A-4724-B9B8-2CE5826DEAB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgizDisSagligiApp.Tests", "Tests\AgizDisSagligiApp.Tests.csproj", "{A45893E7-CF1F-485B-8EBF-5F2C7D27AF8B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83BAD863-8EA0-4D54-B129-DE42E674A969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83BAD863-8EA0-4D54-B129-DE42E674A969}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83BAD863-8EA0-4D54-B129-DE42E674A969}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83BAD863-8EA0-4D54-B129-DE42E674A969}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCDB3FCC-69CF-4B67-A793-CC6B880FE1E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCDB3FCC-69CF-4B67-A793-CC6B880FE1E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCDB3FCC-69CF-4B67-A793-CC6B880FE1E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCDB3FCC-69CF-4B67-A793-CC6B880FE1E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D873A82-6381-4A1D-81A0-4DFB5D28D327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D873A82-6381-4A1D-81A0-4DFB5D28D327}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D873A82-6381-4A1D-81A0-4DFB5D28D327}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D873A82-6381-4A1D-81A0-4DFB5D28D327}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878C5EC5-BC4A-4724-B9B8-2CE5826DEAB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878C5EC5-BC4A-4724-B9B8-2CE5826DEAB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878C5EC5-BC4A-4724-B9B8-2CE5826DEAB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878C5EC5-BC4A-4724-B9B8-2CE5826DEAB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A45893E7-CF1F-485B-8EBF-5F2C7D27AF8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A45893E7-CF1F-485B-8EBF-5F2C7D27AF8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A45893E7-CF1F-485B-8EBF-5F2C7D27AF8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A45893E7-CF1F-485B-8EBF-5F2C7D27AF8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
