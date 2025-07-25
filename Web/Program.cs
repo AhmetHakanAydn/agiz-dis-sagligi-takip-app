@@ -27,9 +27,9 @@ builder.Services.AddControllersWithViews();
 
 // Add Entity Framework
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(
+    options.UseSqlite(
         builder.Configuration.GetConnectionString("DefaultConnection") ?? 
-        "Host=localhost;Database=AgizDisSagligiApp;Username=postgres;Password=password"));
+        "Data Source=DentalHealthApp.db"));
 
 // Add repositories and services
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -1,49 +1,246 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="tr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - AgizDisSagligiApp.Web</title>
+    <title>@ViewData["Title"] - Ağız ve Diş Sağlığı Takip</title>
+    
+    <!-- Modern Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Libraries -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/AgizDisSagligiApp.Web.styles.css" asp-append-version="true" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Modern ağız ve diş sağlığı takip uygulaması">
+    <meta name="theme-color" content="#007bff">
+    <link rel="manifest" href="~/manifest.json">
+    <link rel="apple-touch-icon" href="~/icons/icon-192x192.png">
+    
+    <!-- Modern Favicons -->
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AgizDisSagligiApp.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+<body class="modern-app">
+    <!-- Modern Sidebar Navigation -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <i class="fas fa-tooth text-primary"></i>
+                <span class="brand-text">DiŞ SAĞLIK</span>
+            </div>
+            <button class="sidebar-toggle d-lg-none" onclick="toggleSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="sidebar-menu">
+            <a href="@Url.Action("Index", "Dashboard")" class="menu-item active">
+                <i class="fas fa-home"></i>
+                <span>Ana Sayfa</span>
+            </a>
+            <a href="@Url.Action("Index", "Activities")" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Aktiviteler</span>
+            </a>
+            <a href="@Url.Action("Index", "Goals")" class="menu-item">
+                <i class="fas fa-bullseye"></i>
+                <span>Hedefler</span>
+            </a>
+            <a href="@Url.Action("Index", "Appointments")" class="menu-item">
+                <i class="fas fa-calendar-check"></i>
+                <span>Randevular</span>
+            </a>
+            <a href="@Url.Action("Index", "Reports")" class="menu-item">
+                <i class="fas fa-file-chart"></i>
+                <span>Raporlar</span>
+            </a>
+            <a href="@Url.Action("Index", "Settings")" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Ayarlar</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <div class="user-name">Demo Kullanıcı</div>
+                    <div class="user-email">demo@example.com</div>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="sidebar-toggle d-lg-none" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title">@ViewData["Title"]</h1>
+            </div>
+            
+            <div class="header-right">
+                <div class="header-actions">
+                    <!-- Quick Add Button -->
+                    <button class="btn btn-primary btn-quick-add" data-bs-toggle="modal" data-bs-target="#quickActivityModal">
+                        <i class="fas fa-plus"></i>
+                        <span class="d-none d-md-inline">Hızlı Ekle</span>
+                    </button>
+                    
+                    <!-- Notifications -->
+                    <div class="dropdown">
+                        <button class="btn btn-light btn-notifications" data-bs-toggle="dropdown">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end notification-dropdown">
+                            <h6 class="dropdown-header">Bildirimler</h6>
+                            <div class="notification-item">
+                                <i class="fas fa-tooth text-primary"></i>
+                                <div class="notification-content">
+                                    <div class="notification-text">Diş fırçalama zamanı!</div>
+                                    <div class="notification-time">5 dakika önce</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <i class="fas fa-calendar text-info"></i>
+                                <div class="notification-content">
+                                    <div class="notification-text">Yarın diş hekimi randevunuz var</div>
+                                    <div class="notification-time">2 saat önce</div>
+                                </div>
+                            </div>
+                            <div class="notification-item">
+                                <i class="fas fa-trophy text-warning"></i>
+                                <div class="notification-content">
+                                    <div class="notification-text">7 günlük hedefinizi tamamladınız!</div>
+                                    <div class="notification-time">1 gün önce</div>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-center" href="#">Tümünü Gör</a>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-light btn-profile" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <h6 class="dropdown-header">Demo Kullanıcı</h6>
+                            <a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profil</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Ayarlar</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="page-content">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - AgizDisSagligiApp.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <!-- Quick Activity Modal -->
+    <div class="modal fade" id="quickActivityModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Hızlı Aktivite Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="quickActivityForm">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Aktivite Türü</label>
+                                <div class="activity-type-grid">
+                                    <button type="button" class="activity-type-btn" data-type="1">
+                                        <i class="fas fa-tooth"></i>
+                                        <span>Diş Fırçalama</span>
+                                    </button>
+                                    <button type="button" class="activity-type-btn" data-type="2">
+                                        <i class="fas fa-string"></i>
+                                        <span>Diş İpi</span>
+                                    </button>
+                                    <button type="button" class="activity-type-btn" data-type="3">
+                                        <i class="fas fa-tint"></i>
+                                        <span>Ağız Gargarası</span>
+                                    </button>
+                                    <button type="button" class="activity-type-btn" data-type="4">
+                                        <i class="fas fa-user-md"></i>
+                                        <span>Diş Hekimi</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" id="activityType" name="type" />
+                            </div>
+                            <div class="col-md-6">
+                                <label for="activityDuration" class="form-label">Süre (dakika)</label>
+                                <input type="number" class="form-control" id="activityDuration" name="duration" min="1" max="120" value="2" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Puan</label>
+                                <div class="rating-stars">
+                                    <i class="fas fa-star" data-rating="1"></i>
+                                    <i class="fas fa-star" data-rating="2"></i>
+                                    <i class="fas fa-star" data-rating="3"></i>
+                                    <i class="fas fa-star" data-rating="4"></i>
+                                    <i class="fas fa-star" data-rating="5"></i>
+                                </div>
+                                <input type="hidden" id="activityRating" name="rating" value="5" />
+                            </div>
+                            <div class="col-12">
+                                <label for="activityNotes" class="form-label">Notlar (isteğe bağlı)</label>
+                                <textarea class="form-control" id="activityNotes" name="notes" rows="2" placeholder="Aktivite hakkında notlarınız..."></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="submitQuickActivity()">
+                        <i class="fas fa-save me-2"></i>Kaydet
+                    </button>
+                </div>
+            </div>
         </div>
-    </footer>
+    </div>
+
+    <!-- JavaScript Libraries -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    
+    <!-- Custom Scripts -->
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+        
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
