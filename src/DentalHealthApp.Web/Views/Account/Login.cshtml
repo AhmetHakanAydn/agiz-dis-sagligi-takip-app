@@ -1,0 +1,123 @@
+@model DentalHealthApp.Core.DTOs.LoginDto
+@{
+    ViewData["Title"] = "Giriş Yap";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid vh-100">
+    <div class="row h-100">
+        <!-- Left side - Login form -->
+        <div class="col-lg-6 d-flex align-items-center justify-content-center bg-light">
+            <div class="w-100" style="max-width: 400px;">
+                <div class="text-center mb-4">
+                    <i class="fas fa-tooth text-primary" style="font-size: 4rem;"></i>
+                    <h2 class="fw-bold text-primary mt-3">Giriş Yap</h2>
+                    <p class="text-muted">Ağız ve diş sağlığınızı takip etmeye başlayın</p>
+                </div>
+
+                <form asp-action="Login" method="post" class="needs-validation" novalidate>
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">
+                            <i class="fas fa-envelope me-1"></i>E-posta Adresi
+                        </label>
+                        <input asp-for="Email" type="email" class="form-control form-control-lg" placeholder="ornek@email.com" required>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">
+                            <i class="fas fa-lock me-1"></i>Parola
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="Password" type="password" class="form-control form-control-lg" placeholder="Parolanızı giriniz" required>
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePassword()">
+                                <i class="fas fa-eye" id="toggleIcon"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                        </button>
+                    </div>
+
+                    <div class="text-center">
+                        <a asp-action="ForgotPassword" class="text-decoration-none">
+                            <i class="fas fa-question-circle me-1"></i>Parolanızı mı unuttunuz?
+                        </a>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <p class="mb-0">Hesabınız yok mu?</p>
+                        <a asp-action="Register" class="btn btn-outline-primary mt-2">
+                            <i class="fas fa-user-plus me-2"></i>Kayıt Ol
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right side - Information -->
+        <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center bg-primary text-white">
+            <div class="text-center">
+                <i class="fas fa-heartbeat mb-4" style="font-size: 5rem;"></i>
+                <h1 class="fw-bold mb-4">Sağlıklı Gülümseme</h1>
+                <p class="lead mb-4">Ağız ve diş sağlığınızı takip ederek sağlıklı bir yaşam sürün</p>
+                <div class="row text-center">
+                    <div class="col-4">
+                        <i class="fas fa-calendar-check mb-2" style="font-size: 2rem;"></i>
+                        <p class="small">Günlük Takip</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="fas fa-chart-line mb-2" style="font-size: 2rem;"></i>
+                        <p class="small">İstatistikler</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="fas fa-lightbulb mb-2" style="font-size: 2rem;"></i>
+                        <p class="small">Öneriler</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function togglePassword() {
+            const passwordInput = document.querySelector('input[name="Password"]');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

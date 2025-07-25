@@ -1,0 +1,118 @@
+@model DentalHealthApp.Core.DTOs.ActivityCreateDto
+@{
+    ViewData["Title"] = "Aktivite Kaydet";
+    Layout = "_Layout";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle me-2"></i>Aktivite Kaydet
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="CreateActivity" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="mb-3">
+                            <label asp-for="GoalId" class="form-label">
+                                <i class="fas fa-target me-1"></i>Hedef
+                            </label>
+                            <select asp-for="GoalId" class="form-select" required>
+                                <option value="">Hedef seçiniz</option>
+                                @if (ViewBag.Goals != null)
+                                {
+                                    @foreach (var goal in ViewBag.Goals)
+                                    {
+                                        <option value="@goal.Id">@goal.Title</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="GoalId" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ActivityDate" class="form-label">
+                                    <i class="fas fa-calendar me-1"></i>Tarih
+                                </label>
+                                <input asp-for="ActivityDate" type="date" class="form-control" required>
+                                <span asp-validation-for="ActivityDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="form-check mt-4">
+                                    <input asp-for="IsCompleted" type="checkbox" class="form-check-input" id="isCompleted">
+                                    <label class="form-check-label" for="isCompleted">
+                                        <i class="fas fa-check me-1"></i>Tamamlandı
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Notes" class="form-label">
+                                <i class="fas fa-sticky-note me-1"></i>Notlar (İsteğe Bağlı)
+                            </label>
+                            <textarea asp-for="Notes" class="form-control" rows="3" 
+                                      placeholder="Bu aktivite hakkında notlarınızı ekleyin..."></textarea>
+                            <span asp-validation-for="Notes" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Image" class="form-label">
+                                <i class="fas fa-image me-1"></i>Görsel (İsteğe Bağlı)
+                            </label>
+                            <input asp-for="Image" type="file" class="form-control" accept="image/*">
+                            <div class="form-text">JPG, PNG veya GIF formatında resim yükleyebilirsiniz.</div>
+                            <span asp-validation-for="Image" class="text-danger"></span>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>İpucu:</strong> Düzenli aktivite kaydı yapmak hedeflerinize ulaşmanıza yardımcı olur.
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="DentalHealth" asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>İptal
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Aktiviteyi Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set today as default date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('input[name="ActivityDate"]').value = today;
+        });
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}
