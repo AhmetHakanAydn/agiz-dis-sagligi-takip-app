@@ -1,0 +1,1 @@
+# agiz-dis-sagligi-takip-app
