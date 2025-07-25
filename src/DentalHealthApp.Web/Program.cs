@@ -1,7 +1,39 @@
+using DentalHealthApp.Data.Context;
+using DentalHealthApp.Core.Interfaces;
+using DentalHealthApp.Business.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Configure Entity Framework
+builder.Services.AddDbContext<DentalHealthDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Register services
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IGoalService, GoalService>();
+builder.Services.AddScoped<IActivityService, ActivityService>();
+builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Configure session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+// Configure antiforgery for CSRF protection
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+});
 
 var app = builder.Build();
 
@@ -18,10 +50,28 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Add session middleware
+app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
+
+// Initialize database
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DentalHealthDbContext>();
+    try
+    {
+        context.Database.EnsureCreated();
+    }
+    catch (Exception ex)
+    {
+        // Log exception - in production, use proper logging
+        Console.WriteLine($"Database initialization failed: {ex.Message}");
+    }
+}
 
 app.Run();
