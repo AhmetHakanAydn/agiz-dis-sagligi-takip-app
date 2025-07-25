@@ -1,0 +1,524 @@
+@model AgizDisSagligiApp.Web.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+<!-- Welcome Section -->
+<div class="row mb-4" data-aos="fade-up">
+    <div class="col-12">
+        <div class="welcome-section">
+            <h2 class="gradient-text mb-2">Hoş Geldiniz! 🦷</h2>
+            <p class="text-muted">Bugün diş sağlığınız için neler yapacaksınız?</p>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Cards Row -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="stats-card">
+            <div class="stats-icon">
+                <i class="fas fa-calendar-day"></i>
+            </div>
+            <h3 class="stats-number">@Model.TodayActivities</h3>
+            <p class="stats-label">Bugünkü Aktiviteler</p>
+            <div class="stats-change positive">
+                <i class="fas fa-arrow-up"></i> %15 artış
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+        <div class="stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                <i class="fas fa-bullseye"></i>
+            </div>
+            <h3 class="stats-number">@Model.ActiveGoals.Count()</h3>
+            <p class="stats-label">Aktif Hedefler</p>
+            <div class="stats-change positive">
+                <i class="fas fa-arrow-up"></i> 3 yeni hedef
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+        <div class="stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);">
+                <i class="fas fa-fire"></i>
+            </div>
+            <h3 class="stats-number">@Model.ActivityStreak</h3>
+            <p class="stats-label">Günlük Seri</p>
+            <div class="stats-change positive">
+                <i class="fas fa-fire"></i> Harika gidiyorsun!
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+        <div class="stats-card">
+            <div class="stats-icon" style="background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <h3 class="stats-number">@Math.Round(Model.CompletionRate, 1)%</h3>
+            <p class="stats-label">Tamamlama Oranı</p>
+            <div class="stats-change positive">
+                <i class="fas fa-trophy"></i> Mükemmel!
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content Row -->
+<div class="row g-4">
+    <!-- Weekly Progress Chart -->
+    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="500">
+        <div class="modern-card">
+            <div class="card-header-modern">
+                <h5 class="card-title-modern">
+                    <i class="fas fa-chart-line text-primary"></i>
+                    Haftalık İlerleme
+                </h5>
+            </div>
+            <div class="card-body-modern">
+                <div class="chart-container">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Today's Goals -->
+    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="600">
+        <div class="modern-card">
+            <div class="card-header-modern">
+                <h5 class="card-title-modern">
+                    <i class="fas fa-tasks text-primary"></i>
+                    Bugünkü Hedefler
+                </h5>
+            </div>
+            <div class="card-body-modern">
+                @if (Model.TodayGoals.Any())
+                {
+                    <div class="goals-list">
+                        @foreach (var goal in Model.TodayGoals)
+                        {
+                            <div class="goal-item mb-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="mb-0">@goal.Title</h6>
+                                    <span class="badge bg-primary">@goal.CurrentCount/@goal.TargetCount</span>
+                                </div>
+                                <div class="progress-modern">
+                                    <div class="progress-bar-modern" style="width: @goal.ProgressPercentage%"></div>
+                                </div>
+                                <small class="text-muted mt-1 d-block">%@Math.Round(goal.ProgressPercentage, 1) tamamlandı</small>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-target fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Henüz aktif hedefiniz yok</p>
+                        <a href="@Url.Action("Create", "Goals")" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-2"></i>Hedef Ekle
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activities Row -->
+<div class="row mt-4">
+    <div class="col-lg-8" data-aos="fade-up" data-aos-delay="700">
+        <div class="modern-card">
+            <div class="card-header-modern">
+                <h5 class="card-title-modern">
+                    <i class="fas fa-history text-primary"></i>
+                    Son Aktiviteler
+                </h5>
+            </div>
+            <div class="card-body-modern">
+                @if (Model.RecentActivities.Any())
+                {
+                    <div class="activities-timeline">
+                        @foreach (var activity in Model.RecentActivities)
+                        {
+                            <div class="timeline-item">
+                                <div class="timeline-icon">
+                                    @switch (activity.Type)
+                                    {
+                                        case AgizDisSagligiApp.Core.Enums.ActivityType.Brushing:
+                                            <i class="fas fa-tooth text-primary"></i>
+                                            break;
+                                        case AgizDisSagligiApp.Core.Enums.ActivityType.Flossing:
+                                            <i class="fas fa-string text-info"></i>
+                                            break;
+                                        case AgizDisSagligiApp.Core.Enums.ActivityType.Mouthwash:
+                                            <i class="fas fa-tint text-success"></i>
+                                            break;
+                                        case AgizDisSagligiApp.Core.Enums.ActivityType.DentistVisit:
+                                            <i class="fas fa-user-md text-warning"></i>
+                                            break;
+                                        default:
+                                            <i class="fas fa-check text-secondary"></i>
+                                            break;
+                                    }
+                                </div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">@activity.Name</h6>
+                                    <p class="text-muted mb-1">@activity.CompletedAt.ToString("dd MMMM yyyy, HH:mm")</p>
+                                    @if (!string.IsNullOrEmpty(activity.Notes))
+                                    {
+                                        <small class="text-muted">@activity.Notes</small>
+                                    }
+                                    @if (activity.Rating.HasValue)
+                                    {
+                                        <div class="mt-1">
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="fas fa-star @(i <= activity.Rating ? "text-warning" : "text-muted")" style="font-size: 0.75rem;"></i>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Henüz aktivite kaydınız yok</p>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#quickActivityModal">
+                            <i class="fas fa-plus me-2"></i>İlk Aktivitenizi Ekleyin
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="800">
+        <div class="modern-card">
+            <div class="card-header-modern">
+                <h5 class="card-title-modern">
+                    <i class="fas fa-bolt text-primary"></i>
+                    Hızlı İşlemler
+                </h5>
+            </div>
+            <div class="card-body-modern">
+                <div class="quick-actions">
+                    <button class="btn btn-outline-primary w-100 mb-3" data-bs-toggle="modal" data-bs-target="#quickActivityModal">
+                        <i class="fas fa-plus me-2"></i>Aktivite Ekle
+                    </button>
+                    <a href="@Url.Action("Create", "Goals")" class="btn btn-outline-success w-100 mb-3">
+                        <i class="fas fa-bullseye me-2"></i>Hedef Belirle
+                    </a>
+                    <a href="@Url.Action("Create", "Appointments")" class="btn btn-outline-info w-100 mb-3">
+                        <i class="fas fa-calendar-plus me-2"></i>Randevu Al
+                    </a>
+                    <a href="@Url.Action("Index", "Reports")" class="btn btn-outline-warning w-100">
+                        <i class="fas fa-file-chart me-2"></i>Rapor Oluştur
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Daily Tips Card -->
+<div class="row mt-4">
+    <div class="col-12" data-aos="fade-up" data-aos-delay="900">
+        <div class="modern-card glass-card">
+            <div class="card-body-modern">
+                <div class="row align-items-center">
+                    <div class="col-lg-8">
+                        <h5 class="gradient-text mb-2">💡 Günün İpucu</h5>
+                        <p class="mb-2">Diş fırçanızı en az 2 dakika boyunca dairsel hareketlerle kullanın. Bu, plak birikimini etkili bir şekilde temizler ve diş etlerinizi korur.</p>
+                        <small class="text-muted">Diş hekimi önerisi</small>
+                    </div>
+                    <div class="col-lg-4 text-end">
+                        <img src="~/images/dental-tip.svg" alt="Dental Tip" class="img-fluid" style="max-height: 80px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Initialize weekly chart
+        $(document).ready(function() {
+            initializeWeeklyChart();
+            initializeQuickActivityModal();
+        });
+
+        function initializeWeeklyChart() {
+            $.get('@Url.Action("GetWeeklyChart")', function(data) {
+                const ctx = document.getElementById('weeklyChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#f1f3f4'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        elements: {
+                            point: {
+                                radius: 6,
+                                hoverRadius: 8,
+                                backgroundColor: '#007bff',
+                                borderColor: '#fff',
+                                borderWidth: 2
+                            },
+                            line: {
+                                tension: 0.4
+                            }
+                        }
+                    }
+                });
+            }).fail(function() {
+                $('#weeklyChart').parent().html('<p class="text-center text-muted">Grafik yüklenemedi</p>');
+            });
+        }
+
+        function initializeQuickActivityModal() {
+            // Activity type selection
+            $('.activity-type-btn').on('click', function() {
+                $('.activity-type-btn').removeClass('active');
+                $(this).addClass('active');
+                $('#activityType').val($(this).data('type'));
+            });
+
+            // Rating stars
+            $('.rating-stars i').on('click', function() {
+                const rating = $(this).data('rating');
+                $('#activityRating').val(rating);
+                
+                $('.rating-stars i').removeClass('active');
+                $('.rating-stars i').each(function() {
+                    if ($(this).data('rating') <= rating) {
+                        $(this).addClass('active');
+                    }
+                });
+            });
+
+            // Initialize with first activity type and 5 stars
+            $('.activity-type-btn').first().addClass('active');
+            $('#activityType').val($('.activity-type-btn').first().data('type'));
+            $('.rating-stars i').addClass('active');
+        }
+
+        function submitQuickActivity() {
+            const activityType = $('#activityType').val();
+            const duration = $('#activityDuration').val();
+            const rating = $('#activityRating').val();
+            const notes = $('#activityNotes').val();
+
+            if (!activityType) {
+                showToast('Lütfen bir aktivite türü seçin', 'warning');
+                return;
+            }
+
+            if (!duration || duration < 1) {
+                showToast('Lütfen geçerli bir süre girin', 'warning');
+                return;
+            }
+
+            const data = {
+                type: parseInt(activityType),
+                duration: parseInt(duration) * 60, // Convert to seconds
+                notes: notes
+            };
+
+            $.ajax({
+                url: '@Url.Action("QuickActivity")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function(response) {
+                    if (response.success) {
+                        $('#quickActivityModal').modal('hide');
+                        showToast(response.message, 'success');
+                        
+                        // Reset form
+                        $('#quickActivityForm')[0].reset();
+                        $('.activity-type-btn').removeClass('active');
+                        $('.activity-type-btn').first().addClass('active');
+                        $('#activityType').val($('.activity-type-btn').first().data('type'));
+                        $('.rating-stars i').addClass('active');
+                        $('#activityRating').val('5');
+                        
+                        // Refresh page after a short delay
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 1500);
+                    } else {
+                        showToast(response.message, 'error');
+                    }
+                },
+                error: function() {
+                    showToast('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
+                }
+            });
+        }
+
+        function showToast(message, type) {
+            // Simple toast implementation
+            const toast = $(`
+                <div class="toast-notification toast-${type}">
+                    <i class="fas ${type === 'success' ? 'fa-check' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-times'}"></i>
+                    <span>${message}</span>
+                </div>
+            `);
+            
+            $('body').append(toast);
+            
+            setTimeout(() => {
+                toast.addClass('show');
+            }, 100);
+            
+            setTimeout(() => {
+                toast.removeClass('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Sidebar toggle for mobile
+        function toggleSidebar() {
+            $('.sidebar').toggleClass('show');
+        }
+    </script>
+    
+    <style>
+        /* Timeline Styles */
+        .activities-timeline {
+            position: relative;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 40px;
+            bottom: -24px;
+            width: 2px;
+            background-color: var(--medium-gray);
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            border: 2px solid var(--medium-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding-top: 0.25rem;
+        }
+
+        /* Toast Notifications */
+        .toast-notification {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 9999;
+            min-width: 300px;
+        }
+
+        .toast-notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .toast-notification.toast-success {
+            border-left-color: var(--success-color);
+        }
+
+        .toast-notification.toast-warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .toast-notification.toast-error {
+            border-left-color: var(--danger-color);
+        }
+
+        .toast-notification i {
+            font-size: 1.25rem;
+        }
+
+        .toast-success i {
+            color: var(--success-color);
+        }
+
+        .toast-warning i {
+            color: var(--warning-color);
+        }
+
+        .toast-error i {
+            color: var(--danger-color);
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section .gradient-text {
+            color: var(--white) !important;
+            -webkit-text-fill-color: var(--white) !important;
+        }
+    </style>
+}
