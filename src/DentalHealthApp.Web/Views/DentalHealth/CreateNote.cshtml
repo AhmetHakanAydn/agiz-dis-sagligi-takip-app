@@ -1,0 +1,91 @@
+@model DentalHealthApp.Core.DTOs.NoteCreateDto
+@{
+    ViewData["Title"] = "Not Ekle";
+    Layout = "_Layout";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-warning text-dark">
+                    <h4 class="mb-0">
+                        <i class="fas fa-sticky-note me-2"></i>Yeni Not Ekle
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="CreateNote" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label">
+                                <i class="fas fa-heading me-1"></i>Not Başlığı
+                            </label>
+                            <input asp-for="Title" type="text" class="form-control" 
+                                   placeholder="Örn: Diş hekimi randevusu" required>
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label">
+                                <i class="fas fa-align-left me-1"></i>Not İçeriği
+                            </label>
+                            <textarea asp-for="Content" class="form-control" rows="5" 
+                                      placeholder="Not içeriğinizi buraya yazın..." required></textarea>
+                            <span asp-validation-for="Content" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NoteDate" class="form-label">
+                                <i class="fas fa-calendar me-1"></i>Tarih
+                            </label>
+                            <input asp-for="NoteDate" type="date" class="form-control" required>
+                            <span asp-validation-for="NoteDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>İpucu:</strong> Notlarınız sağlık takibinizde önemli bilgileri hatırlamanıza yardımcı olur.
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="DentalHealth" asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>İptal
+                            </a>
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-save me-2"></i>Notu Kaydet
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Set today as default date
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('input[name="NoteDate"]').value = today;
+        });
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+}

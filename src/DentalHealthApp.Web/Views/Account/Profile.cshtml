@@ -1,0 +1,143 @@
+@model DentalHealthApp.Core.DTOs.ProfileUpdateDto
+@{
+    ViewData["Title"] = "Profil Bilgileri";
+    Layout = "_Layout";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-user-edit me-2"></i>Profil Bilgileri
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Profile" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Ad
+                                </label>
+                                <input asp-for="FirstName" type="text" class="form-control" required>
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label">
+                                    <i class="fas fa-user me-1"></i>Soyad
+                                </label>
+                                <input asp-for="LastName" type="text" class="form-control" required>
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">
+                                <i class="fas fa-envelope me-1"></i>E-posta Adresi
+                            </label>
+                            <input asp-for="Email" type="email" class="form-control" required>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="DateOfBirth" class="form-label">
+                                <i class="fas fa-calendar me-1"></i>Doğum Tarihi
+                            </label>
+                            <input asp-for="DateOfBirth" type="date" class="form-control" required>
+                            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                        </div>
+
+                        <hr>
+                        <h5 class="text-primary mb-3">
+                            <i class="fas fa-key me-2"></i>Parola Değiştir (İsteğe Bağlı)
+                        </h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="NewPassword" class="form-label">
+                                    <i class="fas fa-lock me-1"></i>Yeni Parola
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="NewPassword" type="password" class="form-control" 
+                                           placeholder="Boş bırakılabilir">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('NewPassword')">
+                                        <i class="fas fa-eye" id="toggleIconNewPassword"></i>
+                                    </button>
+                                </div>
+                                <small class="form-text text-muted">
+                                    En az 8 karakter, büyük-küçük harf ve rakam içermelidir
+                                </small>
+                                <span asp-validation-for="NewPassword" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ConfirmNewPassword" class="form-label">
+                                    <i class="fas fa-lock me-1"></i>Yeni Parola Tekrar
+                                </label>
+                                <div class="input-group">
+                                    <input asp-for="ConfirmNewPassword" type="password" class="form-control" 
+                                           placeholder="Boş bırakılabilir">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('ConfirmNewPassword')">
+                                        <i class="fas fa-eye" id="toggleIconConfirmNewPassword"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>İptal
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function togglePassword(fieldName) {
+            const passwordInput = document.querySelector(`input[name="${fieldName}"]`);
+            const toggleIcon = document.getElementById(`toggleIcon${fieldName}`);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        // Form validation
+        (function() {
+            'use strict';
+            window.addEventListener('load', function() {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function(form) {
+                    form.addEventListener('submit', function(event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+        // Set max date to today for date of birth
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('input[name="DateOfBirth"]').setAttribute('max', today);
+        });
+    </script>
+}

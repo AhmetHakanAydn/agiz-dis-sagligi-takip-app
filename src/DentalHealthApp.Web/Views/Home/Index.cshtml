@@ -1,8 +1,139 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bg-primary text-white rounded-3 p-4">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-smile-beam me-3" style="font-size: 3rem;"></i>
+                    <div>
+                        <h2 class="mb-1">Hoş Geldiniz, @ViewBag.UserName!</h2>
+                        <p class="mb-0 opacity-75">Sağlıklı ağız ve diş sağlığı yolculuğunuza devam edin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="mb-3">
+                <i class="fas fa-chart-line me-2 text-primary"></i>Son 7 Günlük Özet
+            </h4>
+        </div>
+        
+        @if (ViewBag.Stats != null)
+        {
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            @foreach (var stat in ViewBag.Stats)
+                            {
+                                <div class="col-lg col-md-3 col-sm-6 mb-3">
+                                    <div class="border-end border-2 px-3">
+                                        <div class="display-6 text-primary fw-bold">@stat.Value</div>
+                                        <small class="text-muted">@stat.Key</small>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="mb-3">
+                <i class="fas fa-bolt me-2 text-primary"></i>Hızlı İşlemler
+            </h4>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-plus-circle text-success mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="card-title">Yeni Hedef</h5>
+                    <p class="card-text text-muted">Sağlık hedefi olu-şturun</p>
+                    <a asp-controller="DentalHealth" asp-action="CreateGoal" class="btn btn-success">
+                        <i class="fas fa-plus me-1"></i>Oluştur
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-check-circle text-primary mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="card-title">Aktivite Kaydet</h5>
+                    <p class="card-text text-muted">Günlük aktivitenizi ekleyin</p>
+                    <a asp-controller="DentalHealth" asp-action="CreateActivity" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Kaydet
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-sticky-note text-warning mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="card-title">Not Ekle</h5>
+                    <p class="card-text text-muted">Önemli notlarınızı kaydedin</p>
+                    <a asp-controller="DentalHealth" asp-action="CreateNote" class="btn btn-warning">
+                        <i class="fas fa-plus me-1"></i>Ekle
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center p-4">
+                    <i class="fas fa-heartbeat text-info mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="card-title">Sağlık Takibi</h5>
+                    <p class="card-text text-muted">Detaylı takip sayfası</p>
+                    <a asp-controller="DentalHealth" asp-action="Index" class="btn btn-info">
+                        <i class="fas fa-chart-bar me-1"></i>Görüntüle
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Recommendations -->
+    @if (ViewBag.Recommendations != null)
+    {
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mb-3">
+                    <i class="fas fa-lightbulb me-2 text-primary"></i>Günün Sağlık Önerileri
+                </h4>
+            </div>
+            @foreach (var recommendation in ViewBag.Recommendations)
+            {
+                <div class="col-lg-4 col-md-6 mb-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                <i class="fas fa-info-circle text-primary me-3 mt-1"></i>
+                                <div>
+                                    <h6 class="card-title fw-bold">@recommendation.Title</h6>
+                                    <p class="card-text text-muted small">@recommendation.Content</p>
+                                    @if (!string.IsNullOrEmpty(recommendation.Category))
+                                    {
+                                        <span class="badge bg-light text-primary">@recommendation.Category</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
